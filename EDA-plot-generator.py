@@ -203,6 +203,248 @@ ax.invert_yaxis()
 plt.tight_layout()
 save_plot('15_missing_values')
 
+# ── 16. Target distributions ──
+print("[16] Target variable distributions")
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for i, t in enumerate(targets):
+    vc = df[t].value_counts()
+    vc.plot.bar(ax=axes[i], color=colors_tf)
+    axes[i].set_title(f'{t}', fontsize=13)
+    axes[i].set_xticklabels(['False', 'True'], rotation=0)
+    for j, v in enumerate(vc.values):
+        axes[i].text(j, v + len(df)*0.005, f'{v:,}\n({v/len(df)*100:.1f}%)', ha='center', fontsize=10)
+    axes[i].set_ylabel('Count')
+fig.suptitle('Target Variable Distribution (Customer Return)', fontsize=15, y=1.02)
+plt.tight_layout()
+save_plot('16_target_distribution')
+
+# ── 17. Return rate by State ──
+print("[17] Return rate by State")
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('State')[t].mean().sort_values(ascending=False)
+    rates.plot.bar(ax=axes[i], color=sns.color_palette("viridis", len(rates)))
+    axes[i].set_title(f'{t} Rate by State', fontsize=12)
+    axes[i].set_ylabel('Return Rate')
+    axes[i].set_ylim(0, 1)
+    for j, v in enumerate(rates.values):
+        axes[i].text(j, v + 0.01, f'{v:.2f}', ha='center', fontsize=9)
+    axes[i].tick_params(axis='x', rotation=30)
+plt.tight_layout()
+save_plot('17_return_by_state')
+
+# ── 18. Return rate by Top 15 Services ──
+print("[18] Return rate by Service")
+top_services = df['Service_Slug'].value_counts().head(15).index
+df_top = df[df['Service_Slug'].isin(top_services)]
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+for i, t in enumerate(targets):
+    rates = df_top.groupby('Service_Slug')[t].mean().sort_values(ascending=False)
+    rates.plot.barh(ax=axes[i], color=sns.color_palette("mako", len(rates)))
+    axes[i].set_title(f'{t} Rate by Service (Top 15)', fontsize=12)
+    axes[i].set_xlabel('Return Rate')
+    axes[i].invert_yaxis()
+    for j, v in enumerate(rates.values):
+        axes[i].text(v + 0.005, j, f'{v:.2f}', va='center', fontsize=9)
+plt.tight_layout()
+save_plot('18_return_by_service')
+
+# ── 19. Return rate by Top 10 Categories ──
+print("[19] Return rate by Category")
+top_cats = df['Category_Slug'].value_counts().head(10).index
+df_topcat = df[df['Category_Slug'].isin(top_cats)]
+fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+for i, t in enumerate(targets):
+    rates = df_topcat.groupby('Category_Slug')[t].mean().sort_values(ascending=False)
+    rates.plot.barh(ax=axes[i], color=sns.color_palette("rocket", len(rates)))
+    axes[i].set_title(f'{t} Rate by Category (Top 10)', fontsize=12)
+    axes[i].set_xlabel('Return Rate')
+    axes[i].invert_yaxis()
+    for j, v in enumerate(rates.values):
+        axes[i].text(v + 0.005, j, f'{v:.2f}', va='center', fontsize=9)
+plt.tight_layout()
+save_plot('19_return_by_category')
+
+# ── 20. Return rate by Payment Method ──
+print("[20] Return rate by Payment")
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('PaymentMethod')[t].mean().sort_values(ascending=False)
+    rates.plot.bar(ax=axes[i], color=sns.color_palette("Set2", len(rates)))
+    axes[i].set_title(f'{t} Rate by Payment', fontsize=12)
+    axes[i].set_ylabel('Return Rate')
+    axes[i].set_ylim(0, 1)
+    for j, v in enumerate(rates.values):
+        axes[i].text(j, v + 0.01, f'{v:.2f}', ha='center', fontsize=10)
+    axes[i].tick_params(axis='x', rotation=0)
+plt.tight_layout()
+save_plot('20_return_by_payment')
+
+# ── 21. Return rate by Gender ──
+print("[21] Return rate by Gender")
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('Customer_Gender')[t].mean().sort_values(ascending=False)
+    rates.plot.bar(ax=axes[i], color=sns.color_palette("pastel", len(rates)))
+    axes[i].set_title(f'{t} Rate by Gender', fontsize=12)
+    axes[i].set_ylabel('Return Rate')
+    axes[i].set_ylim(0, 1)
+    for j, v in enumerate(rates.values):
+        axes[i].text(j, v + 0.01, f'{v:.2f}', ha='center', fontsize=10)
+    axes[i].tick_params(axis='x', rotation=0)
+plt.tight_layout()
+save_plot('21_return_by_gender')
+
+# ── 22. Return rate by Device ──
+print("[22] Return rate by Device")
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('Device')[t].mean().sort_values(ascending=False)
+    rates.plot.bar(ax=axes[i], color=sns.color_palette("husl", len(rates)))
+    axes[i].set_title(f'{t} Rate by Device', fontsize=12)
+    axes[i].set_ylabel('Return Rate')
+    axes[i].set_ylim(0, 1)
+    for j, v in enumerate(rates.values):
+        axes[i].text(j, v + 0.01, f'{v:.2f}', ha='center', fontsize=10)
+    axes[i].tick_params(axis='x', rotation=0)
+plt.tight_layout()
+save_plot('22_return_by_device')
+
+# ── 23. Return rate by Allocation Type ──
+print("[23] Return rate by Allocation")
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('AllocationType')[t].mean().sort_values(ascending=False)
+    rates.plot.bar(ax=axes[i], color=['#3498db', '#e67e22'])
+    axes[i].set_title(f'{t} Rate by Allocation', fontsize=12)
+    axes[i].set_ylabel('Return Rate')
+    axes[i].set_ylim(0, 1)
+    for j, v in enumerate(rates.values):
+        axes[i].text(j, v + 0.01, f'{v:.2f}', ha='center', fontsize=10)
+    axes[i].tick_params(axis='x', rotation=15)
+plt.tight_layout()
+save_plot('23_return_by_allocation')
+
+# ── 24. Return rate by Hour of Day ──
+print("[24] Return rate by Hour")
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('Creation_DateTime_Hour')[t].mean()
+    axes[i].plot(rates.index, rates.values, marker='o', color='steelblue', linewidth=2)
+    axes[i].fill_between(rates.index, rates.values, alpha=0.15, color='steelblue')
+    axes[i].set_title(f'{t} Rate by Hour', fontsize=12)
+    axes[i].set_xlabel('Hour of Day')
+    axes[i].set_ylabel('Return Rate')
+    axes[i].set_xticks(range(24))
+    axes[i].grid(True, alpha=0.3)
+plt.tight_layout()
+save_plot('24_return_by_hour')
+
+# ── 25. Return rate by Day of Week ──
+print("[25] Return rate by Day of Week")
+dow_map = {0:'Mon',1:'Tue',2:'Wed',3:'Thu',4:'Fri',5:'Sat',6:'Sun'}
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('Creation_DateTime_Day_of_Week')[t].mean()
+    labels = [dow_map[d] for d in rates.index]
+    axes[i].bar(labels, rates.values, color=sns.color_palette("viridis", 7))
+    axes[i].set_title(f'{t} Rate by Day of Week', fontsize=12)
+    axes[i].set_ylabel('Return Rate')
+    for j, v in enumerate(rates.values):
+        axes[i].text(j, v + 0.003, f'{v:.3f}', ha='center', fontsize=8)
+    axes[i].grid(axis='y', alpha=0.3)
+plt.tight_layout()
+save_plot('25_return_by_dayofweek')
+
+# ── 26. Return rate by Year & Season ──
+print("[26] Return rate by Year & Season")
+fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+season_map = {1:'Spring', 2:'Summer', 3:'Fall', 4:'Winter'}
+for i, t in enumerate(targets):
+    # By year
+    rates = df.groupby('Creation_DateTime_Year')[t].mean()
+    axes[0][i].bar(rates.index.astype(str), rates.values, color=sns.color_palette("Blues_d", len(rates)))
+    axes[0][i].set_title(f'{t} Rate by Year', fontsize=12)
+    axes[0][i].set_ylabel('Return Rate')
+    for j, v in enumerate(rates.values):
+        axes[0][i].text(j, v + 0.005, f'{v:.3f}', ha='center', fontsize=10)
+    # By season
+    rates_s = df.groupby('Creation_DateTime_Season')[t].mean()
+    labels_s = [season_map[s] for s in rates_s.index]
+    axes[1][i].bar(labels_s, rates_s.values, color=sns.color_palette("coolwarm", 4))
+    axes[1][i].set_title(f'{t} Rate by Season', fontsize=12)
+    axes[1][i].set_ylabel('Return Rate')
+    for j, v in enumerate(rates_s.values):
+        axes[1][i].text(j, v + 0.005, f'{v:.3f}', ha='center', fontsize=10)
+plt.tight_layout()
+save_plot('26_return_by_year_season')
+
+# ── 27. Return rate by Previous Orders (binned) ──
+print("[27] Return rate by Previous Orders")
+df['prev_orders_bin'] = pd.cut(df['Customer_PreviousOrdersCount'], bins=[-1,0,2,5,10,20,120],
+                                labels=['0','1-2','3-5','6-10','11-20','21+'])
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+for i, t in enumerate(targets):
+    rates = df.groupby('prev_orders_bin', observed=True)[t].mean()
+    rates.plot.bar(ax=axes[i], color=sns.color_palette("YlOrRd", len(rates)))
+    axes[i].set_title(f'{t} Rate by Previous Orders', fontsize=12)
+    axes[i].set_ylabel('Return Rate')
+    axes[i].set_xlabel('Previous Orders Count')
+    for j, v in enumerate(rates.values):
+        axes[i].text(j, v + 0.01, f'{v:.2f}', ha='center', fontsize=10)
+    axes[i].tick_params(axis='x', rotation=0)
+plt.tight_layout()
+save_plot('27_return_by_prev_orders')
+
+# ── 28. Numeric features: Return vs No-Return comparison ──
+print("[28] Numeric features by Return (3 Months)")
+num_feats = ['Selected_Price', 'Duration', 'Customer_CharehPoints', 'Customer_Account_Age',
+             'arranged_expert_rate', 'Time_to_First_Contract', 'Time_to_Service',
+             'Customer_Order_Rate', 'arranged_expert_successful_jobs', 'Customer_Engagement']
+fig, axes = plt.subplots(2, 5, figsize=(24, 10))
+for j, col in enumerate(num_feats):
+    ax = axes[j//5, j%5]
+    data = df[[col, 'Customer_return3Months']].dropna()
+    q01, q99 = data[col].quantile(0.01), data[col].quantile(0.99)
+    data = data[(data[col] >= q01) & (data[col] <= q99)]
+    for val, c, lbl in [(False, '#e74c3c', 'No Return'), (True, '#2ecc71', 'Return')]:
+        subset = data[data['Customer_return3Months'] == val][col]
+        ax.hist(subset, bins=40, alpha=0.5, color=c, label=lbl, density=True)
+    ax.set_title(col.replace('_', '\n'), fontsize=9)
+    ax.legend(fontsize=7)
+    ax.tick_params(labelsize=7)
+fig.suptitle('Feature Distributions: Return 3M (green) vs No Return (red) — Normalized', fontsize=14, y=1.02)
+plt.tight_layout()
+save_plot('28_features_by_return3m')
+
+# ── 29. Counselling & Has_Description by Return ──
+print("[29] Return by Counselling & Description")
+fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+for i, t in enumerate(targets):
+    for j, feat in enumerate(['Counselling_Needed', 'Has_Description']):
+        ax = axes[j][i]
+        ct = pd.crosstab(df[feat], df[t], normalize='index')
+        ct.plot.bar(ax=ax, color=colors_tf, stacked=True)
+        ax.set_title(f'{t} by {feat}', fontsize=12)
+        ax.set_ylabel('Proportion')
+        ax.set_ylim(0, 1)
+        ax.legend(['No Return', 'Return'], fontsize=9)
+        ax.tick_params(axis='x', rotation=0)
+plt.tight_layout()
+save_plot('29_return_by_counselling_description')
+
+# ── 30. 3M vs 6M cross-tab ──
+print("[30] 3M vs 6M cross-tabulation")
+fig, ax = plt.subplots(figsize=(6, 5))
+ct = pd.crosstab(df['Customer_return3Months'], df['Customer_return6Months'])
+sns.heatmap(ct, annot=True, fmt=',', cmap='YlGnBu', ax=ax)
+ax.set_title('3-Month vs 6-Month Return Cross-Tab', fontsize=13)
+ax.set_xlabel('Return 6 Months')
+ax.set_ylabel('Return 3 Months')
+plt.tight_layout()
+save_plot('30_3m_vs_6m_crosstab')
+
+
 # ── Save to JSON file ──
 with open('eda_plots.json', 'w') as f:
     json.dump(plots, f)
