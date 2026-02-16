@@ -6,7 +6,9 @@ import re
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
 from tqdm import tqdm
-import math
+import warnings
+
+warnings.filterwarnings('ignore')
 
 
 def remove_high_corr_features(dataframe, threshold=0.95,
@@ -166,7 +168,7 @@ if __name__ == '__main__':
         ('create_temporal_features', FunctionTransformer(create_temporal_features)),
         ('create_numerical_features', FunctionTransformer(create_numerical_features)),
         ('post_filtering', FunctionTransformer(post_filtering)),
-    ])
+    ],verbose=True)
     
     file_path = "../Data/Achareh_Orders_Sampled_Tehran_900000.csv"
     chunk_size = 100_000
