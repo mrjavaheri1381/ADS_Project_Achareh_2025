@@ -203,6 +203,11 @@ ax.invert_yaxis()
 plt.tight_layout()
 save_plot('15_missing_values')
 
+targets = ['Customer_return3Months', 'Customer_return6Months']
+colors_tf = ['#e74c3c', '#2ecc71']  # False=red, True=green
+
+print("Starting Target Variable EDA...\n")
+
 # ── 16. Target distributions ──
 print("[16] Target variable distributions")
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
